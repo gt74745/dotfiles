@@ -14,6 +14,6 @@ xinitrc is also pretty basic. By default it uses feh to set a wallpaper from /us
 
 Install script is stupid simple. Just delete any lines you don't want it doing.
 
-Statusbar is just an xsetroot command in the xinitrc. The shell file is in the dwm source because I can't find anywhere else to put it.
+Statusbar is just an xsetroot command in the xinitrc. The shell file is in the dwm source because I can't find anywhere else to put it. You may have to change some of the commands based on your hardware, particularly for the cpu temp. You can also use the color codes from the dwm-status2d patch.
 
 Enjoy the dots!
