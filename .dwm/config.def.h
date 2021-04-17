@@ -1,20 +1,23 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 3;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
+static const unsigned int gappx     = 8;        /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "Fira Code Nerd Font Mono:size=8:style=bold" };
-static const char col_gray1[]       = "#222222";
-static const char col_gray2[]       = "#444444";
-static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
-static const char col_orange[]        = "#fe8019";
+static const char *fonts[]          = { "Fira Code Nerd Font Mono:pixelsize=12" };
+static const char dmenufont[]       = "monospace:size=10";
+static const char col_gray1[]       = "#282828";
+static const char col_gray2[]       = "#1d2021";
+static const char col_gray3[]       = "#3c3836";
+static const char col_gray4[]       = "#ebdbb2";
+static const char col_white[]       = "#ffffff";
+static const char col_green[]       = "#3f8329";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_orange,  col_orange  },
+	[SchemeNorm] = { col_gray4, col_gray2, col_gray2 },
+	[SchemeSel]  = { col_white, col_green,  col_green  },
 };
 
 /* tagging */
@@ -31,7 +34,7 @@ static const Rule rules[] = {
 };
 
 /* layout(s) */
-static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
+static const float mfact     = 0.5; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 
@@ -40,8 +43,6 @@ static const Layout layouts[] = {
 	{ "[]=",      tile },    /* first entry is default */
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
-	{ "TTT",      bstack },
-	{ "===",      bstackhoriz },
 };
 
 /* key definitions */
@@ -56,12 +57,16 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *dmenucmd[] = { "rofi", "-show", "drun", NULL };
+static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
+static const char *dmenucmd[] = { "rofi", "-show", "drun", "-width", "300", "-display-drun", "Search",  NULL };
 static const char *termcmd[]  = { "st", NULL };
 
-static const char *volup[] = { "amixer", "set", "Master", "10%+", NULL };
-static const char *voldown[] = { "amixer", "set", "Master", "10%-", NULL };
-static const char *mute[] = { "amixer", "set", "Master", "toggle", NULL };
+static const char *volupcmd[] = { "pactl", "set-sink-volume", "0", "+5%", NULL };
+static const char *voldowncmd[] = { "pactl", "set-sink-volume", "0", "-5%", NULL };
+static const char *mutecmd[] = { "pactl", "set-sink-mute", "0", "toggle", NULL };
+
+static const char *shutdowncmd[] = { "shutdown", "0", NULL };
+static const char *restartcmd[] = { "shutdown", "-r", "0", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -80,8 +85,6 @@ static Key keys[] = {
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                       XK_u,      setlayout,      {.v = &layouts[3]} },
-	{ MODKEY,                       XK_o,      setlayout,      {.v = &layouts[4]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
@@ -90,6 +93,8 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+    { MODKEY|ShiftMask|ControlMask, XK_s,      spawn,          {.v = shutdowncmd } },
+    { MODKEY|ShiftMask|ControlMask, XK_r,      spawn,          {.v = restartcmd } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -99,9 +104,9 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-    { 0,                            XF86XK_AudioRaiseVolume,   spawn,   {.v = volup } },
-    { 0,                            XF86XK_AudioLowerVolume,   spawn,   {.v = voldown } },
-    { 0,                            XF86XK_AudioMute,          spawn,   {.v = mute } },
+	{ 0, XF86XK_AudioRaiseVolume, spawn, {.v = volupcmd } },
+	{ 0, XF86XK_AudioLowerVolume, spawn, {.v = voldowncmd } },
+	{ 0, XF86XK_AudioMute, spawn, {.v = mutecmd } },
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 };
 
