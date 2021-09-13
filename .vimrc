@@ -9,12 +9,8 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'morhetz/gruvbox'
 Plugin 'vim-airline/vim-airline'
-Plugin 'valloric/youcompleteme'
 
 call vundle#end()
-
-let g:gruvbox_contrast_dark='hard'
-let g:gruvbox_termcolors=256
 
 set background=dark
 set encoding=utf-8
