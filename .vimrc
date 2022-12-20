@@ -1,29 +1,25 @@
 set nocompatible
+set autoread
 filetype off
 syntax on
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+execute pathogen#infect()
 
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'morhetz/gruvbox'
-Plugin 'vim-airline/vim-airline'
-
-call vundle#end()
-
-set background=dark
-set encoding=utf-8
-set number relativenumber
-set tabstop=4
-set autoindent
-
+let g:gruvbox_termcolors=16
+let g:gruvbox_contrast_dark='hard'
 colorscheme gruvbox
 
-highlight Normal     ctermbg=NONE guibg=NONE
-highlight LineNr     ctermbg=NONE guibg=NONE
-highlight SignColumn ctermbg=NONE guibg=NONE
+hi Normal guibg=NONE ctermbg=NONE
 
+highlight clear ALEErrorSign
+highlight clear ALEWarningSign
+set number
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set noexpandtab
+set smartindent
+set smarttab
+set laststatus=2
 nmap <F6> :NERDTreeToggle<CR>
-nmap <F9> :!gradle test<CR>
-nmap <F10> :!gradle installDebug<CR>
+nmap <F5> :!roborun<CR>
