@@ -5,13 +5,20 @@ URxvt.keysym.Shift-Control-V: eval:paste_clipboard
 URxvt.keysym.Shift-Control-C: eval:selection-to-clipboard
 URxvt.iso14755: false
 URxvt.iso14755_52: false
+URxvt.cursorBlink: 1
+URxvt.cursorUnderline: 1
 
 URxvt.font: xft:Terminus:size=12
 URxvt.geometry: 400x400
 
+XTerm.termName: xterm-256color
+
+XTerm.vt100.faceName: Terminus:size=12
+XTerm.vt100.font: 7x13
+
 ! special
 *.foreground:   #ebdbb2
-*.background:   #1d2021
+*.background:   #282828
 *.cursorColor:  #ebdbb2
 
 ! black

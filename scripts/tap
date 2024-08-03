@@ -1,0 +1,3 @@
+#!/bin/sh
+
+xinput --set-prop 'ELAN0735:00 04F3:316C Touchpad' 'libinput Tapping Enabled' 1
